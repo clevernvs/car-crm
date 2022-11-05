@@ -19,6 +19,7 @@ return new class extends Migration
             $table->float('price')->nullable();
             $table->float('equivalent')->nullable();
             $table->string('discount')->nullable();
+            $table->integer('period')->nullable();
             $table->timestamps();
         });
     }

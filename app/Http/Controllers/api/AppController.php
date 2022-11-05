@@ -23,11 +23,10 @@ class AppController extends Controller
 
         $disable = $date->diffInRealHours($this->user->disabled_account, false);
         $delete = $date->diffInRealHours($this->user->delete_account, false);
-
         $this->user->expira = $this->user->next_expiration;
-
         $this->user->disable = ($disable > 0) ? CarbonInterval::hours($disable)->cascade()->forHumans() : null;
         $this->user->delete = ($delete > 0) ? CarbonInterval::hours($delete)->cascade()->forHumans() : null;
+        $this->user->plan = $this->user->plan;
 
         $app = $this->user;
 

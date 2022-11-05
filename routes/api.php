@@ -5,6 +5,7 @@ use App\Http\Controllers\api\AppController;
 use App\Http\Controllers\api\NotesController;
 use App\Http\Controllers\api\OwnersController;
 use App\Http\Controllers\api\PayController;
+use App\Http\Controllers\api\TransactionController;
 use App\Http\Controllers\api\UnitController;
 use App\Http\Controllers\api\uploads\VehicleUploadController;
 use App\Http\Controllers\api\VehiclesController;
@@ -19,8 +20,11 @@ Route::apiResources([
 ]);
 
 Route::resource('/app', AppController::class);
+Route::resource('/transactions', TransactionController::class)->only('index', 'show');
 
 Route::prefix('pay')->group(function () {
+    Route::post('card', [PayController::class, 'card']);
+    Route::post('pec', [PayController::class, 'pec']);
     Route::get('plans', [PayController::class, 'plans']);
 });
 
