@@ -4,9 +4,10 @@ Sistema de gestão e revenda de automóveis.
 
 ### Tecnologias Utilizadas
 
-- Laravel - Framework PHP
+- PHP 8.1 - Linguagem de Programação
+- Laravel 9 - Framework PHP
 - Laravel Passaport - Full OAuth2 server implementation for your Laravel
-- MySQL - Banco de Dados OpenSource
+- MySQL 8.0 - Banco de Dados OpenSource
 - Intervention Image - Biblioteca para manipulação de imagens.
 - Docker - Container
 
