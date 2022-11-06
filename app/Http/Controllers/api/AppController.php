@@ -27,6 +27,8 @@ class AppController extends Controller
         $this->user->disable = ($disable > 0) ? CarbonInterval::hours($disable)->cascade()->forHumans() : null;
         $this->user->delete = ($delete > 0) ? CarbonInterval::hours($delete)->cascade()->forHumans() : null;
         $this->user->plan = $this->user->plan;
+        $this->user->vehicle = $this->user->vehicle;
+        $this->user->unit = $this->user->unit;
 
         $app = $this->user;
 

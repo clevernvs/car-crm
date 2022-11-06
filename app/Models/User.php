@@ -49,4 +49,14 @@ class User extends Authenticatable
     {
         return $this->hasOne('App\Models\Plans', 'id', 'plan_id');
     }
+
+    public function unit()
+    {
+        return $this->hasOne('App\Models\Units', 'user_id', 'id')->select('id');
+    }
+
+    public function vehicle()
+    {
+        return $this->hasOne('App\Models\Vehicle', 'user_id', 'id')->select('id');
+    }
 }
