@@ -3,37 +3,35 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Notes;
+use App\Http\Requests\NotesFormRequest;
+use App\Repositories\Contracts\NotesRepositoryInterface;
+// use App\Models\Notes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class NotesController extends Controller
 {
     protected $user;
+    protected $notesRepo;
 
-    public function __construct()
+    public function __construct(NotesRepositoryInterface $notesRepo)
     {
         $this->user = Auth()->guard('api')->user();
+        $this->notesRepo = $notesRepo;
     }
 
     public function index(Request $request)
     {
-        $notes = Notes::where('user_id', $this->user->id)
-                        ->where('type', $request->type)
-                        ->where('uid', $request->uid)
-                        ->with('user')
-                        ->orderBy('id', 'DESC')
-                        ->paginate(env('APP_PAGINATE_ITEMS'));
+        $notes = $this->notesRepo->findByUserIdTypeAndUid($this->user->id, $request->type, $request->uid);
 
         return compact('notes');
     }
 
 
-    public function store(Request $request)
+    public function store(NotesFormRequest $request)
     {
-        $validator = Validator::make($request->all(), Notes::$rules);
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 200);
+        if ($request->validated() == false) {
+            return response()->json(['error' => 'Erro de validação.'], 200);
         }
 
         $note = new Notes;
@@ -48,14 +46,13 @@ class NotesController extends Controller
         return $note->fresh('user');
     }
 
-    public function update(Request $request, $id)
+    public function update(NotesFormRequest $request, $id)
     {
-        $validator = Validator::make($request->all(), Notes::$rules);
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 200);
+        if ($request->validated() == false) {
+            return response()->json(['error' => 'Erro de validação.'], 200);
         }
 
-        $note = Notes::where('user_id', $this->user->id)->find($id);
+        $note = $this->notesRepo->findByUserId($this->user->id)->find($id);
 
         if (empty($note->id)) {
             return $this->error('Nota não encontrada.');
@@ -73,7 +70,8 @@ class NotesController extends Controller
 
     public function destroy($id)
     {
-        $note = Notes::where('user_id', $this->user->id)->find($id);
+        // $note = Notes::where('user_id', $this->user->id)->find($id);
+        $note = $this->notesRepo->findByUserId($this->user->id)->find($id);
         if (empty($note->id)) {
             return $this->erro('Nota não encontrada.');
         }

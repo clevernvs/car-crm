@@ -48,17 +48,16 @@ class AppController extends Controller
         }
 
         $validator = Validator::make($request->all(), $rules);
-
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 200);
         }
 
         $this->user->fill($request->all());
 
-        if ($this->user->save()) {
-            return $this->success('Dados atualizados com sucesso!');
+        if ($this->user->save() == false) {
+            return $this->error('Erro ao atualizar dados.');
         }
 
-        return $this->error('Erro ao atualizar dados.');
+        return $this->success('Dados atualizados com sucesso!');
     }
 }

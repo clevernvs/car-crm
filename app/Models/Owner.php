@@ -13,10 +13,10 @@ class Owner extends Model
     protected $table = 'owners';
     protected $guarded = ['id'];
 
-    static $rules = [
-        'name' => 'required|min:3',
-        'phone_1' => 'required|min:9',
-    ];
+    // static $rules = [
+    //     'name' => 'required|min:3',
+    //     'phone_1' => 'required|min:9',
+    // ];
 
     public function setBirthAttribute($value)
     {

@@ -3,32 +3,35 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Plans;
 use App\Models\Transactions;
+use App\Repositories\Contracts\PlansRepositoryInterface;
 use Illuminate\Http\Request;
 use Ixudra\Curl\Facades\Curl;
 
 class PayController extends Controller
 {
     protected $user;
+    protected $plansRepo;
+
     private $accessToken;
 
-    public function __construct()
+    public function __construct(PlansRepositoryInterface $plansRepo)
     {
         $this->user = Auth()->guard('api')->user();
         $this->accessToken = env('MP_ACCESS_TOKEN');
+        $this->plansRepo = $plansRepo;
     }
 
     public function plans()
     {
-        $plans = Plans::all();
+        $plans = $this->plansRepo->getAll();
 
         return compact('plans');
     }
 
     public function card(Request $request)
     {
-        $plan = Plans::find($request->plan_id);
+        $plan = $this->plansRepo->findById($request->plan_id);
         if (empty($plan)) {
             return $this->error('Plano não encontrado.');
         }
@@ -85,7 +88,7 @@ class PayController extends Controller
 
     public function pec(Request $request)
     {
-        $plan = Plans::find($request->plan_id);
+        $plan = $this->plansRepo->findById($request->plan_id);
         if (empty($plan)) {
             return $this->error('Plano não encontrado.');
         }

@@ -12,9 +12,9 @@ class Notes extends Model
     protected $table = 'notes';
     protected $guarded = ['id'];
 
-    static $rules = [
-        'content' => 'required',
-    ];
+    // static $rules = [
+    //     'content' => 'required',
+    // ];
 
     public function user()
     {

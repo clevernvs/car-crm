@@ -3,34 +3,38 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\OwnerFormRequest;
 use App\Models\Owner;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use App\Repositories\Contracts\OwnerRepositoryInterface;
 
 class OwnersController extends Controller
 {
     protected $user;
 
-    public function __construct()
+    public function __construct(OwnerRepositoryInterface $ownerRepo)
     {
         $this->user = Auth()->guard('api')->user();
+        $this->ownerRepo = $ownerRepo;
     }
 
     public function index()
     {
-        $owners = Owner::where('user_id', $this->user->id)
-            ->orderBy('name', 'ASC')
-            ->paginate(env('APP_PAGINATE_ITEMS'));
+        // $owners = Owner::where('user_id', $this->user->id)
+        //     ->orderBy('name', 'ASC')
+        //     ->paginate(env('APP_PAGINATE_ITEMS'));
+
+        $owners = $this->ownerRepo
+                            ->findByUserId()
+                            ->paginate(env('APP_PAGINATE_ITEMS'));
 
         return compact('owners');
     }
 
 
-    public function store(Request $request)
+    public function store(OwnerFormRequest $request)
     {
-        $validator = Validator::make($request->all(), Owner::$rules);
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 200);
+        if (!$request->validated()) {
+            return response()->json(['error' => 'Erro de validação dos campos.'], 200);
         }
 
         $owner = new Owner;
@@ -48,7 +52,8 @@ class OwnersController extends Controller
 
     public function show($id)
     {
-        $owner = Owner::where('user_id', $this->user->id)->find($id);
+        // $owner = Owner::where('user_id', $this->user->id)->find($id);
+        $owner = $this->ownerRepo->findByUserId($this->user->id)->find($id);
         if (empty($owner->id)) {
             return $this->error('Nenhum proprietário encontrado.');
         }
@@ -57,11 +62,10 @@ class OwnersController extends Controller
     }
 
 
-    public function update(Request $request, $id)
+    public function update(OwnerFormRequest $request, $id)
     {
-        $validator = Validator::make($request->all(), Owner::$rules);
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 200);
+        if (!$request->validated()) {
+            return response()->json(['error' => 'Erro de validação dos campos.'], 200);
         }
 
         $owner = Owner::where('user_id', $this->user->id)->find($id);
@@ -85,7 +89,7 @@ class OwnersController extends Controller
 
     public function destroy($id)
     {
-        $owner = Owner::where('user_id', $this->user->id)->find($id);
+        $owner = $this->ownerRepo->findByUserId($this->user->id)->find($id);
         if (empty($owner->id)) {
             return $this->error('Proprietário não encontrado.');
         }
