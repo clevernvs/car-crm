@@ -26,14 +26,13 @@ class NotificationController extends Controller
             'payment' => $request->all(),
         ]);
 
-        if (isset($request->type) && isset($request->data['id'])) {
+        if (isset($request->type, $request->data['id'])) {
             return response()->json(400);
         }
 
         if ($request->type == 'payment') {
-
-            $payment = Curl::to('https://api.mercadopago.com/v1/payments/' . $request->data['id'])
-                            ->withAuthorization('Bearer ' . $this->accessToken)
+            $payment = Curl::to('https://api.mercadopago.com/v1/payments/'.$request->data['id'])
+                            ->withAuthorization('Bearer '.$this->accessToken)
                             ->asJson()
                             ->get();
 
@@ -43,7 +42,7 @@ class NotificationController extends Controller
                                 ->first();
                 if ($transaction->id) {
                     $transaction->update([
-                        'status' => $payment->status,
+                        'status'        => $payment->status,
                         'status_detail' => $payment->status_detail,
                     ]);
                 }
@@ -59,11 +58,11 @@ class NotificationController extends Controller
 
                     // }
 
-                    $user->status = 2;
-                    $user->plan_id = $plan->id;
+                    $user->status           = 2;
+                    $user->plan_id          = $plan->id;
                     $user->disabled_account = null;
-                    $user->delete_account = null;
-                    $user->next_expiration = $dateNextExpiration;
+                    $user->delete_account   = null;
+                    $user->next_expiration  = $dateNextExpiration;
 
                     // if (!$user->save()) {
                     //     return response()->json(400);
@@ -75,12 +74,9 @@ class NotificationController extends Controller
                         return response()->json(200);
                     }
                 }
-
             } else {
                 return response()->json(400);
-
             }
         }
-
     }
 }

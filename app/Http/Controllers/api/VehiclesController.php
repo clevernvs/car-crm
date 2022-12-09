@@ -5,7 +5,6 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\VehicleFormRequest;
 use App\Models\Vehicle;
-use App\Models\VehicleBrand;
 use App\Models\VehicleCarColor;
 use App\Models\VehicleCarSteering;
 use App\Models\VehicleCubiccms;
@@ -21,12 +20,13 @@ use App\Models\VehicleType;
 use App\Repositories\Contracts\VehicleBrandRepositoryInterface;
 use App\Repositories\Contracts\VehicleRepositoryInterface;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
 
 class VehiclesController extends Controller
 {
     protected $user;
+
     protected $vehicleRepo;
+
     protected $vehicleBrandRepo;
 
     public function __construct(
@@ -44,11 +44,10 @@ class VehiclesController extends Controller
         // VehicleExchangeRepositoryInterface $vehicleExchangeRepo,
         // VehicleFinancialsRepositoryInterface $vehicleFinancialsRepo,
         // VehicleCubiccmsRepositoryInterface $vehicleCubiccmsRepo,
-    )
-    {
-       $this->user = Auth()->guard('api')->user();
-       $this->vehicleRepo = $vehicleRepo;
-       $this->vehicleBrandRepo = $vehicleBrandRepo;
+    ) {
+        $this->user             = Auth()->guard('api')->user();
+        $this->vehicleRepo      = $vehicleRepo;
+        $this->vehicleBrandRepo = $vehicleBrandRepo;
     //    $this->vehicleTypeRepo = $vehicleTypeRepo;
     //    $this->vehicleRegdateRepo = $vehicleRegdateRepo;
     //    $this->vehicleGearboxRepo = $vehicleGearboxRepo;
@@ -67,17 +66,17 @@ class VehiclesController extends Controller
     {
         return [
             'vehicle_types' => VehicleType::all(),
-            'regdate' => VehicleRegdate::orderBy('label', 'ASC'),
-            'gearbox' => VehicleGearbox::all(),
-            'fuel' => VehicleFuel::all(),
-            'car_steering' => VehicleCarSteering::all(),
-            'motorpower' => VehicleMotorpower::all(),
-            'doors' => VehicleDoors::all(),
-            'features' => VehicleFeatures::all(),
-            'car_color' => VehicleCarColor::all(),
-            'exchange' => VehicleExchange::all(),
-            'financials' => VehicleFinancials::all(),
-            'cubccms' => VehicleCubiccms::all(),
+            'regdate'       => VehicleRegdate::orderBy('label', 'ASC'),
+            'gearbox'       => VehicleGearbox::all(),
+            'fuel'          => VehicleFuel::all(),
+            'car_steering'  => VehicleCarSteering::all(),
+            'motorpower'    => VehicleMotorpower::all(),
+            'doors'         => VehicleDoors::all(),
+            'features'      => VehicleFeatures::all(),
+            'car_color'     => VehicleCarColor::all(),
+            'exchange'      => VehicleExchange::all(),
+            'financials'    => VehicleFinancials::all(),
+            'cubccms'       => VehicleCubiccms::all(),
         ];
     }
 
@@ -85,9 +84,10 @@ class VehiclesController extends Controller
     {
         $vehicles = $this->vehicleRepo->findActiveByUserId($this->user->id);
 
-        $vehicles->transform(function ($vehicle) {
-            $vehicle->vehicle_model = $vehicle->vehicleModel();
+        $vehicles->transform(function($vehicle) {
+            $vehicle->vehicle_model   = $vehicle->vehicleModel();
             $vehicle->vehicle_version = $vehicle->vehicleVersion();
+
             return $vehicle;
         });
 
@@ -102,7 +102,6 @@ class VehiclesController extends Controller
         return array_merge(['vehicle' => $vehicle], $this->getData());
     }
 
-
     public function show($id)
     {
         $vehicle = $this->vehicleRepo->findWithPhotoByUserIdAndVehicleId($this->user->id, $id);
@@ -110,8 +109,8 @@ class VehiclesController extends Controller
             return $this->error('Veículo não encontrado!');
         }
 
-        $vehicleBrand = $this->brand($vehicle->vehicle_type);
-        $vehicleModel = $this->model($vehicle->vehicle_type, $vehicle->vehicle_brand);
+        $vehicleBrand   = $this->brand($vehicle->vehicle_type);
+        $vehicleModel   = $this->model($vehicle->vehicle_type, $vehicle->vehicle_brand);
         $vehicleVersion = $this->version($vehicle->vehicle_brand, $vehicle->vehicle_model);
 
         return array_merge(['vehicle' => $vehicle], $vehicleBrand, $vehicleModel, $vehicleVersion, $this->getData());
@@ -132,8 +131,8 @@ class VehiclesController extends Controller
         }
 
         $vehicle->fill($request->all());
-        $vehicle->status = 1;
-        $vehicle->uf_url = $this->validateURL($request->uf);
+        $vehicle->status   = 1;
+        $vehicle->uf_url   = $this->validateURL($request->uf);
         $vehicle->city_url = $this->validateURL($request->city);
 
         if ($vehicle->save() == false) {
@@ -156,7 +155,7 @@ class VehiclesController extends Controller
             Storage::deleteDirectory($directory);
         }
 
-        if (!$vehicle->delete()) {
+        if (! $vehicle->delete()) {
             return $this->error('Erro ao excluir o veículo.');
         }
 
@@ -172,11 +171,11 @@ class VehiclesController extends Controller
 
     public function model($vehicleTypeId, $vehicleBrandId)
     {
-        # code...
+        // code...
     }
 
     public function version($vehicleBrandId, $vehicleModelId)
     {
-        # code...
+        // code...
     }
 }

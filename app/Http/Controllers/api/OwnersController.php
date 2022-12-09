@@ -13,7 +13,7 @@ class OwnersController extends Controller
 
     public function __construct(OwnerRepositoryInterface $ownerRepo)
     {
-        $this->user = Auth()->guard('api')->user();
+        $this->user      = Auth()->guard('api')->user();
         $this->ownerRepo = $ownerRepo;
     }
 
@@ -30,14 +30,13 @@ class OwnersController extends Controller
         return compact('owners');
     }
 
-
     public function store(OwnerFormRequest $request)
     {
-        if (!$request->validated()) {
+        if (! $request->validated()) {
             return response()->json(['error' => 'Erro de validação dos campos.'], 200);
         }
 
-        $owner = new Owner;
+        $owner          = new Owner;
         $owner->user_id = $this->user->id;
         $owner->fill($request->all());
         $owner->save();
@@ -48,7 +47,6 @@ class OwnersController extends Controller
 
         return $owner;
     }
-
 
     public function show($id)
     {
@@ -61,10 +59,9 @@ class OwnersController extends Controller
         return $owner;
     }
 
-
     public function update(OwnerFormRequest $request, $id)
     {
-        if (!$request->validated()) {
+        if (! $request->validated()) {
             return response()->json(['error' => 'Erro de validação dos campos.'], 200);
         }
 
@@ -74,7 +71,7 @@ class OwnersController extends Controller
         }
 
         $owner->fill($request->all());
-        if (!$owner->save()) {
+        if (! $owner->save()) {
             return $this->error('Erro ao atualizar dados.');
         }
 
@@ -94,7 +91,7 @@ class OwnersController extends Controller
             return $this->error('Proprietário não encontrado.');
         }
 
-        if (!$owner->delete()) {
+        if (! $owner->delete()) {
             return $this->error('Erro ao excluir proprietário.');
         }
 

@@ -17,11 +17,9 @@ use App\Models\VehicleMotorpower;
 use App\Models\VehicleRegdate;
 use App\Models\VehicleType;
 use App\Models\VehicleVersion;
-use Illuminate\Http\Request;
 
 class DataScraping extends Controller
 {
-
     public function index($vehicle_type_id)
     {
         $this->marcas($vehicle_type_id);
@@ -33,27 +31,27 @@ class DataScraping extends Controller
     public function marcas($vehicle_type_id)
     {
         if ($vehicle_type_id == 2020) {
-            $dataCarros = json_decode(file_get_contents(public_path('2020.json')));
+            $dataCarros    = json_decode(file_get_contents(public_path('2020.json')));
             $vehicle_brand = $dataCarros[1];
         }
 
         if ($vehicle_type_id == 2060) {
-            $dataMotos = json_decode(file_get_contents(public_path('2060.json')));
+            $dataMotos     = json_decode(file_get_contents(public_path('2060.json')));
             $vehicle_brand = $dataMotos[0];
         }
 
         foreach ($vehicle_brand->values_list as $brand) {
             VehicleBrand::firstOrCreate([
-                'label' => $brand->label,
-                'value' => $brand->value,
+                'label'           => $brand->label,
+                'value'           => $brand->value,
                 'vehicle_type_id' => $vehicle_type_id,
             ]);
 
             foreach ($brand->values as $model) {
                 VehicleModel::firstOrCreate([
-                    'brand_id' => $brand->value,
-                    'label' => $model->label,
-                    'value' => $model->value,
+                    'brand_id'        => $brand->value,
+                    'label'           => $model->label,
+                    'value'           => $model->value,
                     'vehicle_type_id' => $vehicle_type_id,
                 ]);
 
@@ -61,8 +59,8 @@ class DataScraping extends Controller
                     VehicleVersion::firstOrCreate([
                         'brand_id' => $brand->value,
                         'model_id' => $model->value,
-                        'label' => $version->label,
-                        'value' => $version->value,
+                        'label'    => $version->label,
+                        'value'    => $version->value,
                     ]);
                 }
             }
@@ -75,50 +73,50 @@ class DataScraping extends Controller
 
         $array = [
             [
-                'data' => $data[2],
+                'data'  => $data[2],
                 'class' => VehicleRegdate::class,
             ],
             [
-                'data' => $data[3],
+                'data'  => $data[3],
                 'class' => VehicleGearbox::class,
             ],
             [
-                'data' => $data[4],
+                'data'  => $data[4],
                 'class' => VehicleFuel::class,
             ],
             [
-                'data' => $data[5],
+                'data'  => $data[5],
                 'class' => VehicleCarSteering::class,
             ],
             [
-                'data' => $data[6],
+                'data'  => $data[6],
                 'class' => VehicleMotorpower::class,
             ],
             [
-                'data' => $data[9],
+                'data'  => $data[9],
                 'class' => VehicleDoors::class,
             ],
             [
-                'data' => $data[12],
+                'data'  => $data[12],
                 'class' => VehicleCarColor::class,
             ],
             [
-                'data' => $data[14],
+                'data'  => $data[14],
                 'class' => VehicleExchange::class,
             ],
             [
-                'data' => $data[15],
+                'data'  => $data[15],
                 'class' => VehicleFinancials::class,
             ],
         ];
 
         foreach ($array as $item) {
-            $item = (object)$item;
+            $item = (object) $item;
 
             foreach ($item->data->values_list as $value) {
                 $valid = $item::class::where('value', $value->value)->first();
                 if (empty($valid)) {
-                    $item->class::create((array)$value);
+                    $item->class::create((array) $value);
                 }
             }
         }
@@ -131,11 +129,9 @@ class DataScraping extends Controller
             $features_car->vehicle_type_id = 2020;
 
             if (empty($valid)) {
-                VehicleFeatures::create((array)$features_car);
+                VehicleFeatures::create((array) $features_car);
             }
         }
-
-
     }
 
     public function moto()
@@ -143,10 +139,10 @@ class DataScraping extends Controller
         $data = json_decode(file_get_contents(public_path('2060.json')));
 
         foreach ($data[3]->values_list as $value) {
-            $valid =  VehicleCubiccms::where('value', $value->value)->first();
+            $valid = VehicleCubiccms::where('value', $value->value)->first();
 
             if (empty($value)) {
-                VehicleCubiccms::create((array)$value);
+                VehicleCubiccms::create((array) $value);
             }
         }
 
@@ -158,7 +154,7 @@ class DataScraping extends Controller
             $features_moto->vehicle_type_id = 2060;
 
             if (empty($valid)) {
-                VehicleFeatures::create((array)$features_moto);
+                VehicleFeatures::create((array) $features_moto);
             }
         }
     }

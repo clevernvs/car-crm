@@ -24,7 +24,7 @@ class OwnerFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|min:3',
+            'name'    => 'required|min:3',
             'phone_1' => 'required|min:9',
         ];
     }

@@ -13,36 +13,37 @@ class VehicleUploadController extends Controller
 {
     protected $user;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->user = Auth()->guard('api')->user;
     }
 
     public function create(Request $request)
     {
-        $file = $request->file('file');
-        $filename = md5(uniqid(time())).strchr($file->getClientOriginalName(), '.');
+        $file     = $request->file('file');
+        $filename = md5(uniqid(time())).strstr($file->getClientOriginalName(), '.');
 
         $vehicle = Vehicle::where('user_id', $this->user->id)->find($request->id);
 
-        if (!$vehicle) {
+        if (! $vehicle) {
             return response()->json(['error' => 'Veículo não encontrado.']);
         }
 
         if ($request->hasFile('file') && $file->isValid()) {
             $photo = VehiclePhoto::create([
-                'user_id' => $this->user->id,
+                'user_id'    => $this->user->id,
                 'vehicle_id' => $request->id,
-                'img' => $filename,
+                'img'        => $filename,
             ]);
 
             if ($photo->id) {
                 $img = Image::make($request->file)->orientate();
-                $img->resize(1000, null, function ($constraint) {
+                $img->resize(1000, null, function($constraint) {
                     $constraint->aspectRatio();
                     $constraint->upsize();
                 });
 
-                $imageName = 'vehicles/' . $this->user->id . '/' . $photo->vehicle_id . '/' . $filename;
+                $imageName = 'vehicles/'.$this->user->id.'/'.$photo->vehicle_id.'/'.$filename;
 
                 Storage::put($imageName, $img->encode(), 'public');
 
@@ -56,7 +57,7 @@ class VehicleUploadController extends Controller
     public function update(Request $request)
     {
         foreach ($request->order as $order => $id) {
-            $position = VehiclePhoto::where('user_id', $this->user_id)->find($id);
+            $position        = VehiclePhoto::where('user_id', $this->user_id)->find($id);
             $position->order = $order;
             $position->save();
         }
@@ -68,7 +69,7 @@ class VehicleUploadController extends Controller
     {
         $photo = VehiclePhoto::where('user_id', $this->user->id)->find($id);
         if ($photo->id) {
-            $path = 'vehicles/' . $this->user->id . '/' . $photo->vehicle_id . '/' . $photo->img;
+            $path = 'vehicles/'.$this->user->id.'/'.$photo->vehicle_id.'/'.$photo->img;
             if (Storage::exists($path)) {
                 Storage::delete($path);
             }
@@ -78,10 +79,8 @@ class VehicleUploadController extends Controller
             }
 
             return response()->json(['error' => 'Erro ao apagar imagem.']);
-
         }
 
         return response()->json(['error' => 'Imagem não encontrada']);
-
     }
 }

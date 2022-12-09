@@ -11,5 +11,4 @@ Route::post('/mercadopago/notification', [NotificationController::class, 'notifi
 Route::get('/thumb/{path}/{img}', [ImageController::class, 'thumb']);
 Route::post('/register', [AuthController::class, 'store']);
 
-
 // Route::get('/olx/{id}', [DataScraping::class, 'index']);

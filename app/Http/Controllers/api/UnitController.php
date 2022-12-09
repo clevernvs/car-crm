@@ -11,11 +11,12 @@ use Illuminate\Support\Facades\Validator;
 class UnitController extends Controller
 {
     protected $user;
+
     protected $unitsRepo;
 
     public function __construct(UnitsRepositoryInterface $unitsRepo)
     {
-        $this->user = Auth()->guard('api')->user();
+        $this->user      = Auth()->guard('api')->user();
         $this->unitsRepo = $unitsRepo;
     }
 
@@ -27,7 +28,6 @@ class UnitController extends Controller
         return compact('units');
     }
 
-
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), Units::$rules);
@@ -35,7 +35,7 @@ class UnitController extends Controller
             return response()->json(['error' => $validator->errors()], 200);
         }
 
-        $unit = new Units;
+        $unit          = new Units;
         $unit->user_id = $this->user->id;
         $unit->fill($request->all());
         $unit->save();
@@ -46,7 +46,6 @@ class UnitController extends Controller
 
         return $unit;
     }
-
 
     public function show($id)
     {
@@ -79,9 +78,7 @@ class UnitController extends Controller
         }
 
         return $this->success('Dados atualizados com sucesso!');
-
     }
-
 
     public function destroy($id)
     {
@@ -96,6 +93,5 @@ class UnitController extends Controller
         }
 
         return $this->success('Unidade excluida com sucesso!');
-
     }
 }

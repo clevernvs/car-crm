@@ -10,5 +10,6 @@ class Plans extends Model
     use HasFactory;
 
     protected $table = 'plans';
+
     protected $guarded = ['plans'];
 }

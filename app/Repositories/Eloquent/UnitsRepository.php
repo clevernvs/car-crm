@@ -21,7 +21,6 @@ class UnitsRepository implements UnitsRepositoryInterface
 
     public function findByUserIdAndPlansId($userId, $plansId)
     {
-       return $this->model->where('user_id', $userId)->find($plansId);
+        return $this->model->where('user_id', $userId)->find($plansId);
     }
-
 }

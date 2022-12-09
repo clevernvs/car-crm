@@ -10,12 +10,12 @@ class Vehicle extends Model
     use HasFactory;
 
     protected $casts = [
-        'vehicle_features' => Json::class,
+        'vehicle_features'  => Json::class,
         'vehicle_financial' => Json::class,
     ];
 
     protected $guarded = [
-        'id'
+        'id',
     ];
 
     // static $rules = [

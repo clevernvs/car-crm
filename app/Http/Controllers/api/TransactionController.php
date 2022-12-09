@@ -4,7 +4,6 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Transactions;
-use Illuminate\Http\Request;
 
 class TransactionController extends Controller
 {
@@ -30,12 +29,13 @@ class TransactionController extends Controller
             ->where('transaction_id', $id)
             ->first();
 
-        $transactions->transform(function ($transaction) {
-            $transaction->status_pt_br = __('mercadoPago.' . $transaction->status);
-            $transaction->status_detail = __('mercadoPago.' . $transaction->status_detail, [
+        $transactions->transform(function($transaction) {
+            $transaction->status_pt_br  = __('mercadoPago.'.$transaction->status);
+            $transaction->status_detail = __('mercadoPago.'.$transaction->status_detail, [
                 'statement_decriptor' => $transaction->description,
-                'payment_method_id' => $transaction->payment_method_id,
+                'payment_method_id'   => $transaction->payment_method_id,
             ]);
+
             return $transaction;
         });
 

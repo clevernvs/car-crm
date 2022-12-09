@@ -14,9 +14,9 @@ class Controller extends BaseController
     public function success($message = 'Arquivo excluido com sucesso.', $time = 1200)
     {
         return response()->json([
-            'status' => 200,
+            'status'  => 200,
             'success' => $message,
-            'time' => $time,
+            'time'    => $time,
         ], 200);
     }
 
@@ -24,21 +24,22 @@ class Controller extends BaseController
     {
         return response()->json([
             'status' => 400,
-            'error' => $message,
-            'time' => $time,
+            'error'  => $message,
+            'time'   => $time,
         ], 200);
     }
 
     public function validateURL($string)
     {
-        $Format = array();
+        $Format      = [];
         $Format['a'] = '';
         $Format['b'] = '';
 
         $Data = strtr(utf8_decode($string), utf8_decode($Format['a']), $Format['b']);
         $Data = strip_tags(trim($Data));
         $Data = str_replace('', '-', $Data);
-        $Data = str_replace(array('----', '----', '----', '----'), '-', $Data);
+        $Data = str_replace(['----', '----', '----', '----'], '-', $Data);
+
         return strtolower(utf8_encode($Data));
     }
 }

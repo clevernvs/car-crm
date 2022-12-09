@@ -20,5 +20,4 @@ class VehicleBrandRepository implements VehicleBrandRepositoryInterface
                         ->where('vehicle_type_id', $vehicleTypeId)
                         ->get();
     }
-
 }

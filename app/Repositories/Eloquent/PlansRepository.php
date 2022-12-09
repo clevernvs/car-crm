@@ -16,12 +16,11 @@ class PlansRepository implements PlansRepositoryInterface
 
     public function getAll()
     {
-       return $this->model->all();
+        return $this->model->all();
     }
 
     public function findById($id)
     {
-       return $this->model->find($id);
+        return $this->model->find($id);
     }
-
 }

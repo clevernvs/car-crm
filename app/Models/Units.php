@@ -10,12 +10,13 @@ class Units extends Model
     use HasFactory;
 
     protected $table = 'units';
+
     protected $guarded = ['id'];
 
-    static $rules = [
-        'phone' => 'required"|min:13',
-        'city' => 'required"',
-        'uf' => 'required"',
+    public static $rules = [
+        'phone'        => 'required"|min:13',
+        'city'         => 'required"',
+        'uf'           => 'required"',
         'neighborhood' => 'required"',
     ];
 }

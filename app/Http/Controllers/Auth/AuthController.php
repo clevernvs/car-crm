@@ -14,8 +14,8 @@ class AuthController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|unique:users|max:255',
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|string|email|unique:users|max:255',
             'password' => 'required|string|min:6',
         ]);
 
@@ -23,20 +23,20 @@ class AuthController extends Controller
             return response()->json(['errors' => $validator->errors()], 400);
         }
 
-        $date = Carbon::now();
+        $date           = Carbon::now();
         $delete_account = Carbon::now();
 
-        $user = new User;
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->password = Hash::make($request->password);
+        $user                  = new User;
+        $user->name            = $request->name;
+        $user->email           = $request->email;
+        $user->password        = Hash::make($request->password);
         $user->next_expiration = $date->addDays(7);
         $user->deleted_account = $delete_account->addDays(15);
         $user->save();
 
         if ($user->id) {
             return response()->json([
-                'access_token' => $user->createToken('auth-api')->accessToken
+                'access_token' => $user->createToken('auth-api')->accessToken,
             ], 200);
         }
 

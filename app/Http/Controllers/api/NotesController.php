@@ -7,16 +7,16 @@ use App\Http\Requests\NotesFormRequest;
 use App\Repositories\Contracts\NotesRepositoryInterface;
 // use App\Models\Notes;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class NotesController extends Controller
 {
     protected $user;
+
     protected $notesRepo;
 
     public function __construct(NotesRepositoryInterface $notesRepo)
     {
-        $this->user = Auth()->guard('api')->user();
+        $this->user      = Auth()->guard('api')->user();
         $this->notesRepo = $notesRepo;
     }
 
@@ -27,14 +27,13 @@ class NotesController extends Controller
         return compact('notes');
     }
 
-
     public function store(NotesFormRequest $request)
     {
         if ($request->validated() == false) {
             return response()->json(['error' => 'Erro de validação.'], 200);
         }
 
-        $note = new Notes;
+        $note          = new Notes;
         $note->user_id = $this->user->id;
         $note->fill($request->all());
         $note->save();
@@ -65,7 +64,6 @@ class NotesController extends Controller
         } else {
             return $this->erro('Erro ao atualizar os dados.');
         }
-
     }
 
     public function destroy($id)

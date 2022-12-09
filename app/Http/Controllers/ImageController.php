@@ -11,25 +11,25 @@ class ImageController extends Controller
 {
     public function thumb(Request $request, $path = null, $img = null)
     {
-        $user = ($request->user) ? (int)$request->user . '/' : '';
-        $subPatch = ($request->subPatch) ? $request->subPatch . '/' : '';
-        $width = ($request->width) ? (int)$request->width : null;
-        $height = ($request->height) ? (int)$request->height : null;
+        $user     = ($request->user) ? (int) $request->user.'/' : '';
+        $subPatch = ($request->subPatch) ? $request->subPatch.'/' : '';
+        $width    = ($request->width) ? (int) $request->width : null;
+        $height   = ($request->height) ? (int) $request->height : null;
 
-        $path = $path . '/' . $user . $subPatch . $img;
-        $url = Storage::get($path);
+        $path = $path.'/'.$user.$subPatch.$img;
+        $url  = Storage::get($path);
 
-        if (!$width && !$height) {
-            $imagem = Image::cache(function ($image) use ($url) {
+        if (! $width && ! $height) {
+            $imagem = Image::cache(function($image) use ($url) {
                 $image->make($url);
             });
         } else {
-            $imagem = Image::cache(function ($image) use ($url, $width, $height) {
+            $imagem = Image::cache(function($image) use ($url, $width, $height) {
                 if ($width && $height) {
                     $image->make($url)->fit($width, $height);
                 } else {
                     $image->make($url)
-                        ->resize($width, $height, function ($constraint) {
+                        ->resize($width, $height, function($constraint) {
                             $constraint->aspectRatio();
                             $constraint->upsize();
                         });

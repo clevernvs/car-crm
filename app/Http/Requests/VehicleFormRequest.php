@@ -24,17 +24,17 @@ class VehicleFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'zipCode' => 'required',
-            'city' => 'required',
-            'uf' => 'required',
-            'vehicle_type' => 'required',
-            'vehicle_brand' => 'required',
-            'vehicle_model' => 'required',
+            'zipCode'         => 'required',
+            'city'            => 'required',
+            'uf'              => 'required',
+            'vehicle_type'    => 'required',
+            'vehicle_brand'   => 'required',
+            'vehicle_model'   => 'required',
             'vehicle_version' => 'required',
             'vehicle_regdate' => 'required',
-            'vehicle_fuel' => 'required',
-            'vehicle_price' => 'required',
-            'vehicle_photos' => 'exists:vehicle_photos,vehicle_id',
+            'vehicle_fuel'    => 'required',
+            'vehicle_price'   => 'required',
+            'vehicle_photos'  => 'exists:vehicle_photos,vehicle_id',
         ];
     }
 }

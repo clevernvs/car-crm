@@ -11,6 +11,7 @@ class Owner extends Model
     use HasFactory;
 
     protected $table = 'owners';
+
     protected $guarded = ['id'];
 
     // static $rules = [
@@ -22,5 +23,4 @@ class Owner extends Model
     {
         $this->attibutes['birth'] = Carbon::parse($value);
     }
-
 }
