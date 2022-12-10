@@ -4,8 +4,8 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\NotesFormRequest;
+use App\Models\Notes;
 use App\Repositories\Contracts\NotesRepositoryInterface;
-// use App\Models\Notes;
 use Illuminate\Http\Request;
 
 class NotesController extends Controller
@@ -33,7 +33,7 @@ class NotesController extends Controller
             return response()->json(['error' => 'Erro de validação.'], 200);
         }
 
-        $note          = new Notes;
+        $note          = new Notes();
         $note->user_id = $this->user->id;
         $note->fill($request->all());
         $note->save();
